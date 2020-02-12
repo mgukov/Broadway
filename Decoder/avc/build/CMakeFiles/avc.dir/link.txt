@@ -1,0 +1,1 @@
+/mnt/c/dev/github/emsdk/upstream/emscripten/emar rc libavc.a  @CMakeFiles/avc.dir/objects1.rsp
