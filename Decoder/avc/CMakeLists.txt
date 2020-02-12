@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.8)
 
 project(avc)
 
+#string(APPEND CMAKE_C_FLAGS " -msimd128")
+
+SET(CMAKE_SYSTEM_PROCESSOR aarch64)
+
 set(SDL2_DIR /usr/lib/x86_64-linux-gnu/cmake/SDL2)
 
 message("CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}")
@@ -20,12 +24,15 @@ link_directories(
 include_directories(
         inc
         src
+        yuv2rgb
         ${SDL2_INCLUDE_DIRS}
+        ../../../emsdk/upstream/emscripten/system/include/
 )
 
 
 add_library(
         avc
+        "yuv2rgb/yuv_rgb.c"
         "src/h264bsd_transform.c"
         "src/h264bsd_util.c"
         "src/h264bsd_byte_stream.c"
@@ -61,3 +68,6 @@ target_link_libraries(
 #        ${SDL2_LIBRARIES}
         /usr/lib/x86_64-linux-gnu/libSDL2.so
 )
+
+#set_target_properties(avc PROPERTIES LINK_FLAGS -msimd128)
+#set_target_properties(avc PROPERTIES COMPILE_FLAGS -msimd128)

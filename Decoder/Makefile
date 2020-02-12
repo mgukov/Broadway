@@ -1,15 +1,20 @@
 INPUT_DIR=./src
 OUTPUT_DIR=./dist
 
-EMCC_OPTS=-O3 --llvm-lto 1 --memory-init-file 1 -s NO_DYNAMIC_EXECUTION=1 -s NO_FILESYSTEM=1
+
+TOTAL_MEMORY=$(shell echo "32 * 1024 * 1024" | bc)
+EMCC_OPTS=-O3 -msimd128 --llvm-lto 3 --llvm-opts 3 --memory-init-file 1 -s NO_DYNAMIC_EXECUTION=1 \
+	-s NO_FILESYSTEM=1 -s DISABLE_EXCEPTION_CATCHING=1 -s TOTAL_MEMORY=$(TOTAL_MEMORY) \
+	-s INVOKE_RUN=0 -s DOUBLE_MODE=0
 DEFAULT_EXPORTS:='_free','_malloc', 'ccall', 'cwrap'
 
 AVC_DIR=avc
+AVC_BUILD=$(AVC_DIR)/build
 AVC_JS=$(OUTPUT_DIR)/avc.js
-AVC_OBJ=$(AVC_DIR)/build/libavc.a
-AVC_EXPORTS:='_broadwayGetMajorVersion', '_broadwayGetMinorVersion', '_broadwayInit', '_broadwayExit', '_broadwayCreateStream', '_broadwayPlayStream', '_broadwayOnHeadersDecoded', '_broadwayOnPictureDecoded'
+AVC_OBJ=$(AVC_BUILD)/libavc.a
 
-#'HEAP8', 'HEAP16', 'HEAP32', 
+AVC_EXPORTS:='_broadwayGetMajorVersion', '_broadwayGetMinorVersion', '_broadwayInit', '_broadwayExit', '_broadwayCreateStream', '_broadwayPlayStream', '_broadwayOnHeadersDecoded', '_broadwayOnPictureDecoded'
+ 
 
 AVC_PUCK=avc.wasm.js
 
@@ -21,12 +26,13 @@ avc_puck: avc_build
 	cat before.js $(AVC_JS) after.js > dist/$(AVC_PUCK)
 
 clean:
-	rm -rf $(OUTPUT_DIR)
+	rm -rf $(OUTPUT_DIR) $(AVC_BUILD)
 	mkdir $(OUTPUT_DIR)
+	mkdir $(AVC_BUILD)
 
 avc_obj: clean
-	cd $(AVC_DIR)/build; emconfigure /usr/bin/cmake ..
-	cd $(AVC_DIR)/build; emmake make
+	cd $(AVC_BUILD); emconfigure /usr/bin/cmake ..
+	cd $(AVC_BUILD); emmake make
 
 
 avc_build: avc_obj
