@@ -1,3 +1,0 @@
-/mnt/c/dev/github/Broadway/Decoder/avc/build/CMakeFiles/rebuild_cache.dir
-/mnt/c/dev/github/Broadway/Decoder/avc/build/CMakeFiles/avc.dir
-/mnt/c/dev/github/Broadway/Decoder/avc/build/CMakeFiles/edit_cache.dir
