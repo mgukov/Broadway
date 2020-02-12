@@ -1,4 +1,4 @@
-Broadway.js
+h264js
 ===========
 A JavaScript H.264 decoder.
 
